@@ -55,6 +55,8 @@ export interface GeneratedImage {
   prompt: string;
   imageDataUrl: string;
   createdAt: string; // ISO timestamp
+  /** present when this was an edit of an uploaded photo, rather than generated from scratch */
+  sourceImageDataUrl?: string;
 }
 
 export interface GenerateImageRequest {
@@ -106,4 +108,34 @@ export interface GenerateFlowchartRequest {
 
 export interface GenerateFlowchartResponse {
   flowchart: TorFlowchart;
+}
+
+export interface LearningResource {
+  name: string;
+  /** free-text kind, e.g. "book", "course", "app", "tool", "equipment", "website" */
+  type: string;
+  note: string | null;
+}
+
+export interface LearningStage {
+  title: string;
+  description: string;
+  milestones: string[];
+  resources: LearningResource[];
+}
+
+export interface LearningPlan {
+  topic: string;
+  overview: string;
+  /** Mermaid `flowchart` definition of the stage sequence */
+  pipelineMermaid: string;
+  stages: LearningStage[];
+}
+
+export interface GenerateLearningPlanRequest {
+  topic: string;
+}
+
+export interface GenerateLearningPlanResponse {
+  plan: LearningPlan;
 }

@@ -5,6 +5,8 @@ import type {
   GeneratedImage,
   GenerateFlowchartResponse,
   GenerateImageResponse,
+  GenerateLearningPlanResponse,
+  LearningPlan,
   SummarizeDocumentResponse,
   TorFlowchart,
   TranscribeAudioResponse,
@@ -27,6 +29,20 @@ export async function generateImage(prompt: string): Promise<GeneratedImage> {
   if (!res.ok) {
     const body = await res.json().catch(() => null);
     throw new Error(body?.error || `Failed to generate image (${res.status})`);
+  }
+  const data: GenerateImageResponse = await res.json();
+  return data.image;
+}
+
+export async function editImage(file: File, prompt: string): Promise<GeneratedImage> {
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("prompt", prompt);
+
+  const res = await fetch("/api/images/edit", { method: "POST", body: formData });
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new Error(body?.error || `Failed to edit image (${res.status})`);
   }
   const data: GenerateImageResponse = await res.json();
   return data.image;
@@ -71,6 +87,20 @@ export async function generateFlowchart(text: string, title: string): Promise<To
   }
   const data: GenerateFlowchartResponse = await res.json();
   return data.flowchart;
+}
+
+export async function generateLearningPlan(topic: string): Promise<LearningPlan> {
+  const res = await fetch("/api/learning/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ topic }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new Error(body?.error || `Failed to generate learning plan (${res.status})`);
+  }
+  const data: GenerateLearningPlanResponse = await res.json();
+  return data.plan;
 }
 
 export async function downloadSummaryExport(summary: DocumentSummary, format: "pptx" | "pdf"): Promise<void> {

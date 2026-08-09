@@ -1,5 +1,4 @@
 import ffmpegPathImport from "ffmpeg-static";
-import type { NextFunction, Request, Response } from "express";
 import { Router } from "express";
 import ffmpeg from "fluent-ffmpeg";
 import multer from "multer";
@@ -10,6 +9,7 @@ import { randomUUID } from "node:crypto";
 import { toFile } from "openai";
 import type { TranscribeAudioResponse } from "@dashboard/shared";
 import { getOpenAIClient } from "../lib/openaiClient.js";
+import { multerErrorHandler } from "../lib/uploads.js";
 
 // Same NodeNext/CJS default-export interop quirk documented in documents.ts (pptxgenjs).
 const ffmpegPath = ffmpegPathImport as unknown as string | null;
@@ -116,16 +116,4 @@ audioRouter.post("/transcribe", upload.single("audio"), async (req, res) => {
   }
 });
 
-// Multer throws synchronously-caught errors (e.g. file too large) via next(err) rather than
-// the route handler's try/catch, so they need their own error-handling middleware to surface as JSON.
-audioRouter.use((err: unknown, _req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof multer.MulterError) {
-    const message =
-      err.code === "LIMIT_FILE_SIZE"
-        ? `Audio file is too large (max ${UPLOAD_LIMIT_BYTES / (1024 * 1024)}MB).`
-        : err.message;
-    res.status(400).json({ error: message });
-    return;
-  }
-  next(err);
-});
+audioRouter.use(multerErrorHandler(`Audio file is too large (max ${UPLOAD_LIMIT_BYTES / (1024 * 1024)}MB).`));

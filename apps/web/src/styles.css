@@ -512,8 +512,28 @@ details.table-toggle summary {
 
 .image-generator-form {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 16px;
+}
+
+.image-generator-inputs {
+  display: flex;
+  gap: 8px;
+}
+
+.photo-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.photo-preview img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }
 
 .image-prompt-input {
@@ -566,6 +586,16 @@ details.table-toggle summary {
   border-radius: 8px;
   display: block;
   background: var(--page-plane);
+}
+
+.image-before-after {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.image-result-card:has(.image-before-after) {
+  grid-column: span 2;
 }
 
 .image-skeleton {
@@ -757,4 +787,96 @@ details.table-toggle summary {
 
 .flowchart-stages li {
   margin-bottom: 4px;
+}
+
+.learning-plan-card {
+  max-width: 100%;
+}
+
+.learning-stage {
+  padding-top: 16px;
+  border-top: 1px solid var(--gridline);
+}
+
+.learning-plan-card > .learning-stage:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.learning-stage h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  color: var(--text-primary);
+  text-transform: none;
+  letter-spacing: normal;
+  margin: 0 0 6px;
+}
+
+.stage-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--series-1);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.stage-description {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.learning-stage h4 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+  margin: 14px 0 6px;
+}
+
+.resource-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.resource-list li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--gridline);
+}
+
+.resource-list li:last-child {
+  border-bottom: none;
+}
+
+.resource-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 600;
+}
+
+/* .resource-type is layered on the .action-owner pill (same badge shape/colors) -
+   this only overrides the bits that differ: smaller, uppercase, letter-spaced. */
+.resource-type {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.resource-note {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
 }

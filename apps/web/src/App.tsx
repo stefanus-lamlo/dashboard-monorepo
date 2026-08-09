@@ -10,6 +10,7 @@ import { ImageGenerator } from "./components/ImageGenerator";
 import { DocumentSummarizer } from "./components/DocumentSummarizer";
 import { AudioTranscriber } from "./components/AudioTranscriber";
 import { FlowchartGenerator } from "./components/FlowchartGenerator";
+import { LearningPathGenerator } from "./components/LearningPathGenerator";
 
 const RANGES: { value: DateRange; label: string }[] = [
   { value: "7d", label: "7 days" },
@@ -17,7 +18,7 @@ const RANGES: { value: DateRange; label: string }[] = [
   { value: "90d", label: "90 days" },
 ];
 
-type View = "dashboard" | "images" | "documents" | "audio" | "flowchart";
+type View = "dashboard" | "images" | "documents" | "audio" | "flowchart" | "learning";
 
 const VIEW_SUBTITLES: Record<View, string> = {
   dashboard: "An overview of visitors and revenue.",
@@ -25,6 +26,7 @@ const VIEW_SUBTITLES: Record<View, string> = {
   documents: "Summarize a document or meeting transcript, then export it as PPTX or PDF.",
   audio: "Transcribe a meeting recording (Bahasa Indonesia).",
   flowchart: "Turn a TOR / Kerangka Acuan Kerja document into a flowchart.",
+  learning: "Turn any topic into a learning pipeline, track, and material list.",
 };
 
 export default function App() {
@@ -91,6 +93,9 @@ export default function App() {
         <button aria-pressed={view === "flowchart"} onClick={() => setView("flowchart")}>
           TOR flowchart
         </button>
+        <button aria-pressed={view === "learning"} onClick={() => setView("learning")}>
+          Learning path
+        </button>
       </div>
 
       {view === "images" && <ImageGenerator />}
@@ -109,6 +114,7 @@ export default function App() {
         />
       )}
       {view === "flowchart" && <FlowchartGenerator />}
+      {view === "learning" && <LearningPathGenerator />}
 
       {view === "dashboard" && (
         <>

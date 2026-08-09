@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { TorFlowchart } from "@dashboard/shared";
 import { generateFlowchart } from "../api";
-
-let mermaidInitialized = false;
+import { useMermaidRender } from "../hooks/useMermaidRender";
 
 function slugify(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-+|-+$)/g, "") || "flowchart";
@@ -35,33 +34,7 @@ export function FlowchartGenerator() {
     }
   }
 
-  useEffect(() => {
-    if (!flowchart || !diagramRef.current) return;
-    let cancelled = false;
-    const container = diagramRef.current;
-
-    async function render() {
-      try {
-        const { default: mermaid } = await import("mermaid");
-        if (!mermaidInitialized) {
-          mermaid.initialize({ startOnLoad: false, theme: "neutral", securityLevel: "strict" });
-          mermaidInitialized = true;
-        }
-        const { svg } = await mermaid.render(`tor-flowchart-${Date.now()}`, flowchart!.mermaidDefinition);
-        if (!cancelled) {
-          container.innerHTML = svg;
-          setRenderError(null);
-        }
-      } catch (err) {
-        if (!cancelled) setRenderError(err instanceof Error ? err.message : "Failed to render the diagram");
-      }
-    }
-
-    render();
-    return () => {
-      cancelled = true;
-    };
-  }, [flowchart]);
+  useMermaidRender(flowchart?.mermaidDefinition, diagramRef, setRenderError);
 
   function downloadSvg() {
     const svgEl = diagramRef.current?.querySelector("svg");
